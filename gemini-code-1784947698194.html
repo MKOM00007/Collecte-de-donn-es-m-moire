@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collecte de données — Verbes de localisation</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing:border-box; }
+
+body {
+    margin:0;
+    font-family:Arial, sans-serif;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Mode sombre conservant l'identité visuelle d'origine */
+body.dark { background:#121212; color:white; }
+body.dark .sujet { color:#345; }
+body.dark input[type="text"], body.dark select, body.dark textarea { background:#1e1e1e; color:white; border-color:#444; }
+body.dark .barre-progression-bg { background:#333; }
+
+/* Loader de page */
+.page-loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+body.dark .page-loader { background: rgba(18, 18, 18, 0.9); color: white; }
+
+.page-loader.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.spinner {
+    width: 42px;
+    height: 42px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid orange;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.partie {
+    margin-left:20px;
+    width:auto;
+    display:inline-block;
+    border-bottom:4px solid orange;
+    padding-bottom:5px;
+    padding-right:10px;
+}
+
+header {
+    position:fixed;
+    top:0;
+    left:0;
+    background:#345;
+    width:100%;
+    text-align:center;
+    color:white;
+    z-index:8;
+    padding-block:4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header h1 {
+    font-size:clamp(15px, 3.5vw, 24px);
+    margin:12px 8px;
+}
+
+#boutonRetour {
+    position:fixed;
+    top:12px;
+    left:12px;
+    font-size:14px;
+    font-weight:bold;
+    background:white;
+    color:#345;
+    box-shadow:0 0 3px grey;
+    padding:6px 12px;
+    border-radius:6px;
+    z-index:13;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    gap:6px;
+    transition:0.2s;
+}
+
+#boutonRetour.visible { display:flex; }
+#boutonRetour:hover { background:orange; color:white; }
+
+#opener {
+    position:fixed;
+    top:12px;
+    right:12px;
+    font-size:22px;
+    background:white;
+    color:#345;
+    box-shadow:0 0 3px grey;
+    padding:2px 10px;
+    border-radius:6px;
+    z-index:13;
+    cursor:pointer;
+}
+
+/* Barre de progression du questionnaire */
+.barre-progression-wrapper {
+    position: sticky;
+    top: 55px;
+    z-index: 7;
+    background: inherit;
+    padding: 8px 20px;
+}
+
+.barre-progression-bg {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.barre-progression-fill {
+    height: 100%;
+    width: 0%;
+    background: orange;
+    transition: width 0.3s ease;
+}
+
+.sujet {
+    margin-inline:12px;
+    text-align:center;
+    margin-bottom:30px;
+    box-shadow:0 0 5px lightgrey;
+    padding:18px;
+    background:aliceblue;
+    font-weight:bolder;
+    border-radius:8px;
+    color:#345;
+}
+
+.sujet marquee {
+    border:2px solid #00aeef;
+    padding:18px;
+    font-weight:bolder;
+    background:white;
+    border-radius:8px;
+    color:#345;
+}
+
+.rech {
+    position:fixed;
+    background:white;
+    width:100%;
+    text-align:center;
+    padding:15px;
+    top:0;
+    left:0;
+    z-index:14;
+    display:none;
+}
+
+.rech.active { display:block; }
+
+.rech input {
+    width:80%;
+    max-width:420px;
+    padding-block:8px;
+    padding-inline:10px;
+    border-radius:6px;
+    border:1px solid grey;
+}
+
+.rech i {
+    box-shadow:0 0 5px grey;
+    text-align:center;
+    padding:8px;
+    background:orange;
+    color:white;
+    border-radius:50%;
+    margin-left:8px;
+    cursor:pointer;
+}
+
+.conteneur {
+    margin-inline:20px;
+    margin-block:30px;
+    text-align:center;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 0 4px grey;
+    padding:12px;
+}
+
+.conteneur .bordure { border-radius:8px; }
+
+.conteneur .element {
+    display:block;
+    padding:12px;
+    border-radius:8px;
+    box-shadow:0 0 3px lightgrey;
+    margin:8px;
+    background:rgba(0,0,0,0.05);
+    font-weight:bolder;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+body.dark .conteneur .element {
+    background:rgba(255,255,255,0.08);
+}
+
+.conteneur .element:hover { background:orange; color:white; }
+
+.conteneur .element.selectionne {
+    background:#345;
+    color:white;
+    box-shadow:0 0 6px #345;
+}
+
+.conteneur .element input { float:right; }
+
+.conteneur select {
+    padding:8px;
+    border-radius:6px;
+    border:1px solid grey;
+    font-weight:bolder;
+    max-width:90%;
+}
+
+.conteneur img {
+    width:100%;
+    max-width:300px;
+    aspect-ratio:6/7;
+    object-fit:cover;
+    margin:8px auto;
+    border-radius:8px;
+    display:block;
+}
+
+/*----Menu------*/
+
+.menu {
+    position:fixed;
+    background:white;
+    color:#345;
+    box-shadow:0 0 4px grey;
+    width:100%;
+    height:100%;
+    display:none;
+    padding:8px;
+    z-index:15;
+    top:0;
+    left:0;
+    transition:0.5s;
+    overflow-y:auto;
+}
+
+body.dark .menu {
+    background:#1a1a1a;
+    color:white;
+}
+
+.menu.visible { display:block; }
+
+.menu .item {
+    transition:0.2s;
+    padding-inline:10px;
+    padding-block:10px;
+    font-weight:bolder;
+    border-bottom:2px solid transparent;
+    cursor:pointer;
+    width:100%;
+}
+
+.parent {
+    margin-top:80px;
+    display:none;
+    padding-bottom:40px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.parent.active { display:block; }
+
+.menu .item.active { color:orange; }
+
+.menu i {
+    padding:8px;
+    margin-right:10px;
+    background:rgba(0,0,0,0.04);
+    border-radius:50%;
+}
+
+.menu .item.active i {
+    background:orange;
+    border-radius:24px;
+    color:white;
+    padding:8px;
+}
+
+#bars .contour {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    text-align:center;
+    box-shadow:0 0 4px lightgrey;
+    padding:12px;
+}
+
+#bars .contour .liste {
+    text-align:center;
+    padding:10px 22px;
+    box-shadow:0 0 4px lightgrey;
+    border-radius:8px;
+    background:#345;
+    font-weight:bolder;
+    color:white;
+    cursor:pointer;
+}
+
+#bars .clavier {
+    position:fixed;
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:50;
+    padding:12px 24px;
+    border-radius:30px;
+    background:#345;
+    color:white;
+    font-weight:bolder;
+    cursor:pointer;
+    box-shadow:0 3px 12px rgba(0,0,0,0.35);
+    transition:0.2s;
+    white-space:nowrap;
+}
+
+#bars .clavier.active { background:orange; }
+
+#bars .contour .liste.active {
+    color:orange;
+    background:aliceblue;
+    border:1px solid orange;
+}
+
+#bars .saisie {
+    position:fixed;
+    left:8px;
+    right:8px;
+    bottom:72px;
+    background:white;
+    box-shadow:0 -3px 14px rgba(0,0,0,0.3);
+    display:none;
+    grid-template-columns:repeat(auto-fit, minmax(46px, 1fr));
+    gap:8px;
+    padding:14px;
+    border-radius:12px;
+    max-height:45vh;
+    overflow:auto;
+    z-index:49;
+    max-width:520px;
+    margin:0 auto;
+}
+
+body.dark #bars .saisie { background:#222; }
+
+#bars .saisie .btn {
+    border:1px solid grey;
+    background:papayawhip;
+    border-radius:5px;
+    padding:10px 4px;
+    font-size:16px;
+    cursor:pointer;
+    color: black;
+}
+
+#bars .saisie .btn.large { grid-column:span 2; }
+
+#bars .saisie.active { display:grid; }
+
+.conteneur-verbes {
+    display:none;
+    margin:8px;
+    border:1px solid lightgrey;
+    padding:12px;
+    text-align:center;
+    border-radius:8px;
+}
+
+.conteneur-verbes.active { display:block; }
+
+#baoule { padding-bottom:90px; }
+
+.todo-liste li.fait span {
+    text-decoration:line-through;
+    color:grey;
+}
+
+.todo-liste li input[type="checkbox"] {
+    margin-right:10px;
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+    cursor:pointer;
+}
+
+.todo-liste li .contenu-verbe {
+    display:flex;
+    align-items:center;
+    flex:1;
+    min-width:0;
+}
+
+.conteneur-verbes input {
+    padding:8px;
+    margin:12px 6px;
+    width:70%;
+    max-width:320px;
+    border-radius:6px;
+    border:1px solid grey;
+}
+
+.conteneur-verbes button {
+    padding:8px 16px;
+    margin:12px 0;
+    border-radius:6px;
+    border:none;
+    background:#345;
+    color:white;
+    cursor:pointer;
+}
+
+.todo-liste {
+    list-style:none;
+    padding:0;
+    margin:16px auto;
+    max-width:320px;
+    text-align:left;
+}
+
+.todo-liste li {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(0,0,0,0.05);
+    padding:10px 14px;
+    margin-bottom:8px;
+    border-radius:8px;
+    box-shadow:0 0 3px lightgrey;
+    animation:apparition 0.25s ease;
+}
+
+body.dark .todo-liste li {
+    background:rgba(255,255,255,0.08);
+}
+
+.todo-liste li span { word-break:break-word; }
+
+.todo-liste li i {
+    cursor:pointer;
+    color:#c0392b;
+    background:none;
+    padding:4px 6px;
+}
+
+.todo-liste .vide {
+    text-align:center;
+    color:grey;
+    font-weight:normal;
+    box-shadow:none;
+    background:none;
+    display:block;
+}
+
+@keyframes apparition {
+    from { opacity:0; transform:translateY(-6px); }
+    to { opacity:1; transform:translateY(0); }
+}
+
+.el-menu {
+    transition:0.2s;
+    padding:10px 7px;
+    font-weight:bolder;
+    margin-block:4px;
+    cursor:pointer;
+}
+
+#ele {
+    box-shadow:0 0 3px grey;
+    padding:10px;
+    background:white;
+    color:#345;
+}
+
+body.dark #ele { background:#222; color:white; }
+
+.menu #mode { position:relative; display:flex; align-items:center; justify-content:space-between; }
+
+.menu #mode .sombre {
+    border-radius:12px;
+    background:grey;
+    padding:4px 10px;
+    color:white;
+    font-size:13px;
+}
+
+.menu #mode.active .sombre { background:green; color:white; }
+
+.police { margin-right:8px; position:relative; }
+
+.police h4 { display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+
+.police .text {
+    margin-right:4px;
+    margin-left:4px;
+    margin-bottom:8px;
+    transition:0.35s;
+    height:0;
+    overflow:hidden;
+    background:aliceblue;
+    color:#345;
+    border-radius:6px;
+}
+
+.police .text h4 { text-align:center; cursor:default; }
+
+.police .text.active { padding:8px; height:50vh; overflow:auto; }
+
+.police .text label {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 10px;
+    margin-bottom:4px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.police .text label:hover { background:rgba(0,0,0,0.06); }
+
+.police .text label:has(input:checked) {
+    background:orange;
+    color:white;
+    font-weight:bolder;
+}
+
+.chevron-icon { transition:0.35s; }
+.chevron-icon.active { transform:rotate(180deg); }
+
+.avis-zone { padding:8px; }
+
+.avis-zone textarea {
+    width:90%;
+    min-height:90px;
+    resize:vertical;
+    font-family:inherit;
+    padding:8px;
+    border-radius:6px;
+    border:1px solid grey;
+}
+
+.avis-zone .bas-avis {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:90%;
+    margin:8px auto;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.avis-zone #compteurAvis { color:grey; font-size:13px; }
+
+.avis-zone button {
+    padding:8px 16px;
+    border:none;
+    border-radius:6px;
+    background:#345;
+    color:white;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.avis-zone button:hover:not(:disabled) { background:orange; }
+.avis-zone button:disabled { background:grey; cursor:not-allowed; }
+
+#avisConfirmation {
+    display:none;
+    color:green;
+    font-weight:bolder;
+    text-align:center;
+    margin-top:8px;
+}
+
+#avisConfirmation.active { display:block; }
+
+footer {
+    text-align:center;
+    background:#345;
+    padding:14px 8px;
+    color:white;
+}
+
+.overlay, .overlay-form, .overlay-merci {
+    background:rgba(0,0,0,0.8);
+    position:fixed;
+    inset:0;
+    z-index:999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+}
+
+.overlay.active, .overlay-form.active, .overlay-merci.active { display:flex; }
+
+.overlay .message, .overlay-merci .message {
+    position:relative;
+    box-shadow:0 0 4px grey;
+    padding:22px;
+    background:white;
+    border-radius:7px;
+    max-width:420px;
+    width:100%;
+    text-align:center;
+    color: black;
+}
+
+.overlay .message i, .overlay-merci .message i {
+    position:absolute;
+    top:0;
+    right:0;
+    padding:6px 9px;
+    background:aliceblue;
+    border-radius:50%;
+    color:grey;
+    margin:4px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.overlay-merci .message img {
+    width:140px;
+    box-shadow:0 0 3px grey;
+    border-radius:50%;
+    background:aliceblue;
+}
+
+.overlay-form form {
+    position:relative;
+    box-shadow:0 0 4px grey;
+    padding:26px 22px;
+    background:white;
+    border-radius:7px;
+    text-align:center;
+    max-width:340px;
+    width:100%;
+    color: black;
+}
+
+.overlay-form form input {
+    margin:10px 0;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid grey;
+    width:100%;
+}
+
+.overlay-form form button {
+    padding:12px 20px;
+    border:none;
+    background:#345;
+    border-radius:5px;
+    color:white;
+    cursor:pointer;
+    margin-top:8px;
+}
+
+.bouton-soumettre {
+    display:block;
+    width:calc(100% - 40px);
+    max-width:400px;
+    margin:45px auto;
+    box-shadow:0 0 3px lightgrey;
+    padding:14px;
+    text-align:center;
+    border-radius:8px;
+    background:lightgrey;
+    border:none;
+    font-weight:bolder;
+    font-size:16px;
+    color:grey;
+    cursor:not-allowed;
+    transition:0.3s;
+}
+
+.bouton-soumettre.pret { background:#27ae60; color:white; cursor:pointer; }
+.bouton-soumettre.pret:hover { background:#1e874b; }
+
+#flag .contenu-cache p {
+    box-shadow:0 0 3px grey;
+    margin:16px;
+    border-radius:5px;
+    padding:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+#flag h3 { margin:14px 20px 6px; }
+
+#flag .signaler {
+    box-shadow:0 0 3px grey;
+    border-radius:4px;
+    padding:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+}
+
+#flag .contenu-cache {
+    height:0;
+    overflow:hidden;
+    transition:0.4s;
+}
+
+#flag .contenu-cache.active { height:auto; overflow:visible; padding-bottom:20px; }
+
+#flag textarea {
+    width:calc(100% - 40px);
+    margin:16px 20px;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid grey;
+    min-height:70px;
+}
+
+#flag .bouton-envoyer {
+    display:block;
+    margin:8px 20px 20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:6px;
+    background:#345;
+    color:white;
+    cursor:pointer;
+}
+
+.espace-chercheur {
+    background:rgba(0,0,0,0.85);
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+}
+
+.espace-chercheur.visible { display:flex; }
+
+.espace-chercheur .panneau {
+    position:relative;
+    max-width:380px;
+    width:100%;
+    margin:0 auto;
+    padding:22px;
+    box-shadow:0 0 8px grey;
+    border-radius:8px;
+    text-align:center;
+    background:white;
+    color: black;
+}
+
+body.dark .espace-chercheur .panneau { background:#222; color: white; }
+
+.espace-chercheur .panneau i.fa-times {
+    position:absolute;
+    top:6px;
+    right:8px;
+    padding:6px 9px;
+    background:aliceblue;
+    border-radius:50%;
+    color:grey;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.espace-chercheur button {
+    display:block;
+    width:100%;
+    margin:8px 0;
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    background:#345;
+    color:white;
+    cursor:pointer;
+}
+
+.espace-chercheur button:hover { background:orange; }
+
+#declencheurAdmin { cursor:pointer; }
+
+/* ---------- Responsive ---------- */
+
+@media (min-width:700px) {
+    .menu .item { width:auto; min-width:260px; }
+    #bars .saisie { grid-template-columns:repeat(8, minmax(46px, 1fr)); }
+}
+
+@media (max-width:480px) {
+    .conteneur { margin-inline:10px; padding:8px; }
+    .overlay-form form { padding:20px 14px; }
+    .partie { margin-left:12px; }
+    header h1 { margin:10px 6px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-loader" id="pageLoader">
+    <div class="spinner"></div>
+    <span>Chargement...</span>
+</div>
+
+<header>
+    <div id="boutonRetour"><i class="fas fa-arrow-left"></i> Retour</div>
+    <h1>Collecte de données en ligne</h1>
+</header>
+
+<span id="opener" title="Menu">&#9776;</span>
+
+<div class="rech">
+    <input type="text" id="champRecherche" placeholder="Rechercher...">
+    <i class="fas fa-search" id="lancerRecherche"></i>
+</div>
+
+<div id="home" class="parent active">
+
+    <div class="sujet">
+        <b>Thème :</b>
+        <br><br>
+        <marquee scrollamount="4">"A comparative analysis of verbs of location in English and Baoulé."</marquee>
+    </div>
+
+    <!-- Barre de progression -->
+    <div class="barre-progression-wrapper">
+        <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:bold; margin-bottom:4px;">
+            <span>Progression du questionnaire</span>
+            <span id="texteProgression">0%</span>
+        </div>
+        <div class="barre-progression-bg">
+            <div class="barre-progression-fill" id="barreProgression"></div>
+        </div>
+    </div>
+
+    <h3 class="partie">Partie 1 : Simulation en Baoulé</h3>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/qFXCF8WH/file-0000000087a47243922434b294fad038.png" alt="Illustration 1" loading="lazy">
+        <div class="bordure">
+            <label class="element">Tralɛ'n wo asiɛ wun.
+                <input type="radio" name="baoule_q1" id="baoule_q1_o1" value="Tralɛ'n wo asiɛ wun."></label>
+            <label class="element">Tralɛ'n la asiɛ wun.
+                <input type="radio" name="baoule_q1" id="baoule_q1_o2" value="Tralɛ'n la asiɛ wun."></label>
+            <label class="element">Tralɛ'n nannan asiɛ wun.
+                <input type="radio" name="baoule_q1" id="baoule_q1_o3" value="Tralɛ'n nannan asiɛ wun."></label>
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/XxVTGhxV/1784943871507.png" alt="Illustration 2">
+        <div class="bordure">
+            <label class="element">Saki'n sata talɛ su.
+                <input type="radio" name="baoule_q2" id="baoule_q2_o1" value="Saki'n sata talɛ su."></label>
+            <label class="element">Saki'n kissa talɛ wun.
+                <input type="radio" name="baoule_q2" id="baoule_q2_o2" value="Saki'n kissa talɛ wun."></label>
+            <label class="element">Saki'n wo talɛ su.
+                <input type="radio" name="baoule_q2" id="baoule_q2_o3" value="Saki'n wo talɛ su."></label>
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/gLCNGdkb/file-0000000056fc7243b1a2931c421036b6.png" alt="Illustration 3" loading="lazy">
+        <div class="bordure">
+            <label class="element">Buteli'n wo tabli su.
+                <input type="radio" name="baoule_q3" id="baoule_q3_o1" value="Buteli'n wo tabli su."></label>
+            <label class="element">Buteli'n djin tabli su.
+                <input type="radio" name="baoule_q3" id="baoule_q3_o2" value="Buteli'n djin tabli su."></label>
+            <label class="element">Buteli'n taka tabli su.
+                <input type="radio" name="baoule_q3" id="baoule_q3_o3" value="Buteli'n taka tabli su."></label>
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/QjK2tTqF/file-00000000b8247243be18592670ece419.png" alt="Illustration 4" loading="lazy">
+        <div class="bordure">
+            <label class="element">Djelua'n djin tabli su.
+                <input type="radio" name="baoule_q4" id="baoule_q4_o1" value="Djelua'n djin tabli su."></label>
+            <label class="element">Djelua'n wo tabli su.
+                <input type="radio" name="baoule_q4" id="baoule_q4_o2" value="Djelua'n wo tabli su."></label>
+            <label class="element">Djelua'n djran tabli su.
+                <input type="radio" name="baoule_q4" id="baoule_q4_o3" value="Djelua'n djran tabli su."></label>
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/DPTnfsnK/file-00000000db08724398cf95c88c4834fb.png" alt="Illustration 5" loading="lazy">
+        <div class="bordure">
+            <label class="element">Kpon'gbo ba'n wo tabli su.
+                <input type="radio" name="baoule_q5" id="baoule_q5_o1" value="Kpon'gbo ba'n wo tabli su."></label>
+            <label class="element">Kpon'gbo ba'n dji tabli su.
+                <input type="radio" name="baoule_q5" id="baoule_q5_o2" value="Kpon'gbo ba'n dji tabli su."></label>
+            <label class="element">Kpon'gbo ba'n taka tabli su.
+                <input type="radio" name="baoule_q5" id="baoule_q5_o3" value="Kpon'gbo ba'n taka tabli su."></label>
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/h1smN97Y/file-0000000041a87243bb767b36df88fb01.png" alt="Illustration 6" loading="lazy">
+        <div class="bordure">
+            <label class="element">Telefɔni'n wo bia su.
+                <input type="radio" name="baoule_q6" id="baoule_q6_o1" value="Telefɔni'n wo bia su."></label>
+            <label class="element">Telefɔni'n nannan bia su.
+                <input type="radio" name="baoule_q6" id="baoule_q6_o2" value="Telefɔni'n nannan bia su."></label>
+            <label class="element">Telefɔni'n la bia su.
+                <input type="radio" name="baoule_q6" id="baoule_q6_o3" value="Telefɔni'n la bia su."></label>
+        </div>
+    </div>
+
+    <h3 class="partie">Partie 2 : Simulation en Anglais</h3>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/1tGm0nXb/1784941744970.png" alt="Illustration 7">
+        <div class="bordure">
+            The bird is
+            <select id="anglais_q1" name="anglais_q1">
+                <option value="...">...</option>
+                <option value="on">on</option>
+                <option value="standing">standing</option>
+                <option value="sitting">sitting</option>
+            </select>
+            the branch.
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/xKVMg3vp/1784941881549.png" alt="Illustration 8">
+        <div class="bordure">
+            The bird is
+            <select id="anglais_q2" name="anglais_q2">
+                <option value="...">...</option>
+                <option value="on">on</option>
+                <option value="standing">standing</option>
+                <option value="sitting">sitting</option>
+            </select>
+            the branch.
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/2Y00njvh/1784941442543.png" alt="Illustration 9">
+        <div class="bordure">
+            The bird is
+            <select id="anglais_q3" name="anglais_q3">
+                <option value="...">...</option>
+                <option value="on">on</option>
+                <option value="standing">standing</option>
+                <option value="sitting">sitting</option>
+            </select>
+            the branch.
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/XZG9zwx9/1784941332364.png" alt="Illustration 10">
+        <div class="bordure">
+            The bird is
+            <select id="anglais_q4" name="anglais_q4">
+                <option value="...">...</option>
+                <option value="on">on</option>
+                <option value="standing">standing</option>
+                <option value="sitting">sitting</option>
+            </select>
+            the branch.
+        </div>
+    </div>
+
+    <div class="conteneur">
+        <img src="https://i.ibb.co/qXrn9Sw/1784930304504.png" alt="Illustration 11">
+        <div class="bordure">
+            The bird is
+            <select id="anglais_q5" name="anglais_q5">
+                <option value="...">...</option>
+                <option value="on">on</option>
+                <option value="standing">standing</option>
+                <option value="sitting">sitting</option>
+            </select>
+            the branch.
+        </div>
+    </div>
+
+    <button id="soumettreReponses" class="bouton-soumettre" disabled>Soumettre mes réponses</button>
+
+    <footer>
+        <p>By Mathew's KOM</p>
+        <p>Tous droits réservés</p>
+        <p>Copyright 2026</p>
+    </footer>
+</div>
+
+
+<div class="menu">
+    <div id="ele" style="position:sticky; width:100%; top:0; z-index:1; display:flex; justify-content:space-between; align-items:center;">
+        <i class="fas fa-arrow-left" id="arrow" style="font-size:22px;"></i>
+        <i class="fas fa-search" id="search"></i>
+    </div>
+
+    <br>
+    <div class="item active" data-target="home"><i class="fas fa-home"></i>Accueil</div>
+    <div class="item" data-target="bars"><i class="fas fa-list"></i>Citer un verbe</div>
+    <div class="item" data-target="flag"><i class="fas fa-flag"></i>Signaler une erreur dans les phrases</div>
+    <div class="item" data-target="vues"><i class="fas fa-eye"></i>Vues</div>
+
+    <div class="el-menu" id="mode"><span><i class="fas fa-moon"></i>Mode sombre</span><div class="sombre">Désactivé</div></div>
+    <hr>
+
+    <div class="police">
+        <h4 id="chevronPoliceZone"><span><i class="fas fa-pen"></i>Modifier l'affichage</span><i class="fas fa-chevron-down chevron-icon" id="chevronPolice"></i></h4>
+
+        <div class="text" id="zonePolice">
+            <h4>Police :</h4>
+            <label><span>Arial</span><input type="radio" name="texte" value="Arial, sans-serif" checked></label>
+            <label><span style="font-family:'Roboto',sans-serif;">Roboto</span><input type="radio" name="texte" value="'Roboto', sans-serif"></label>
+            <label><span style="font-family:'Archivo Black',sans-serif;">Archivo Black</span><input type="radio" name="texte" value="'Archivo Black', sans-serif"></label>
+            <label><span style="font-family:'Poppins',sans-serif;">Poppins</span><input type="radio" name="texte" value="'Poppins', sans-serif"></label>
+            <label><span style="font-family:'Montserrat',sans-serif;">Montserrat</span><input type="radio" name="texte" value="'Montserrat', sans-serif"></label>
+            <label><span style="font-family:'Lato',sans-serif;">Lato</span><input type="radio" name="texte" value="'Lato', sans-serif"></label>
+            <label><span style="font-family:Georgia,serif;">Georgia</span><input type="radio" name="texte" value="Georgia, serif"></label>
+            <label><span style="font-family:'Courier New',monospace;">Courier New</span><input type="radio" name="texte" value="'Courier New', monospace"></label>
+
+            <br><br>
+            <h4>Taille :</h4>
+            <label><span>12</span><input type="radio" name="taille" value="12"></label>
+            <label><span>16</span><input type="radio" name="taille" value="16" checked></label>
+            <label><span>20</span><input type="radio" name="taille" value="20"></label>
+            <label><span>24</span><input type="radio" name="taille" value="24"></label>
+            <label><span>28</span><input type="radio" name="taille" value="28"></label>
+        </div>
+    </div>
+
+    <h4>Un avis sur le thème</h4>
+    <div class="avis-zone">
+        <textarea id="avisTexte" placeholder="Écrivez votre avis ici..." maxlength="500"></textarea>
+        <div class="bas-avis">
+            <small id="compteurAvis">0 / 500 caractères</small>
+            <button type="button" id="envoyerAvis" disabled>Envoyer</button>
+        </div>
+        <p id="avisConfirmation">Merci pour votre avis !</p>
+    </div>
+    <br>
+</div>
+
+
+<div id="bars" class="parent">
+    <div class="contour">
+        <div class="liste active" data-target="anglais"><i class="fas fa-pen"></i>Anglais</div>
+        <div class="liste" data-target="baoule"><i class="fas fa-pen"></i>Baoulé</div>
+    </div>
+
+    <div class="conteneur-verbes active" id="anglais">
+        <input type="text" id="verbeAnglaisInput" placeholder="Écrire ici...">
+        <button type="button" id="ajouterVerbeAnglais">Ajouter</button>
+        <ul class="todo-liste" data-verbes="anglais"></ul>
+    </div>
+
+    <div class="conteneur-verbes" id="baoule">
+        <div class="clavier" id="clavier"><i class="fas fa-keyboard" style="margin-right:8px;"></i>Clavier Baoulé</div>
+
+        <div class="saisie" id="claviersBaoule">
+            <button type="button" class="btn">ɛ</button>
+            <button type="button" class="btn">Ɛ</button>
+            <button type="button" class="btn">ɔ</button>
+            <button type="button" class="btn">Ɔ</button>
+            <button type="button" class="btn">ŋ</button>
+            <button type="button" class="btn">Ŋ</button>
+            <button type="button" class="btn">ɲ</button>
+            <button type="button" class="btn">Ɲ</button>
+            <button type="button" class="btn">á</button>
+            <button type="button" class="btn">à</button>
+            <button type="button" class="btn">â</button>
+            <button type="button" class="btn">é</button>
+            <button type="button" class="btn">è</button>
+            <button type="button" class="btn">ê</button>
+            <button type="button" class="btn">í</button>
+            <button type="button" class="btn">ì</button>
+            <button type="button" class="btn">ó</button>
+            <button type="button" class="btn">ò</button>
+            <button type="button" class="btn">ú</button>
+            <button type="button" class="btn">ù</button>
+            <button type="button" class="btn" id="btnEspace">␣ Espace</button>
+            <button type="button" class="btn" id="btnEffacer">⌫ Effacer</button>
+        </div>
+
+        <input type="text" id="verbeBaouleInput" placeholder="Écrire ici...">
+        <button type="button" id="ajouterVerbeBaoule">Ajouter</button>
+        <ul class="todo-liste" data-verbes="baoule"></ul>
+    </div>
+</div>
+
+
+<div id="flag" class="parent">
+    <div class="signaler" id="signaler">
+        <span>J'ai remarqué quelques erreurs</span>
+        <i class="fas fa-chevron-down chevron-icon" id="chevronFlag"></i>
+    </div>
+
+    <div class="contenu-cache" id="zoneSignalement">
+        <h3>Partie 1 : Baoulé</h3>
+        <p><span>Phrase 1</span><input type="checkbox" id="bug_baoule_1" data-label="Baoulé — Phrase 1"></p>
+        <p><span>Phrase 2</span><input type="checkbox" id="bug_baoule_2" data-label="Baoulé — Phrase 2"></p>
+        <p><span>Phrase 3</span><input type="checkbox" id="bug_baoule_3" data-label="Baoulé — Phrase 3"></p>
+        <p><span>Phrase 4</span><input type="checkbox" id="bug_baoule_4" data-label="Baoulé — Phrase 4"></p>
+        <p><span>Phrase 5</span><input type="checkbox" id="bug_baoule_5" data-label="Baoulé — Phrase 5"></p>
+        <p><span>Phrase 6</span><input type="checkbox" id="bug_baoule_6" data-label="Baoulé — Phrase 6"></p>
+
+        <h3>Partie 2 : Anglais</h3>
+        <p><span>Phrase 1</span><input type="checkbox" id="bug_anglais_1" data-label="Anglais — Phrase 1"></p>
+        <p><span>Phrase 2</span><input type="checkbox" id="bug_anglais_2" data-label="Anglais — Phrase 2"></p>
+        <p><span>Phrase 3</span><input type="checkbox" id="bug_anglais_3" data-label="Anglais — Phrase 3"></p>
+        <p><span>Phrase 4</span><input type="checkbox" id="bug_anglais_4" data-label="Anglais — Phrase 4"></p>
+        <p><span>Phrase 5</span><input type="checkbox" id="bug_anglais_5" data-label="Anglais — Phrase 5"></p>
+
+        <h3>Rapport de bug</h3>
+        <p><span>Améliorer l'interface</span><input type="checkbox" id="bug_ui" data-label="Interface à améliorer"></p>
+        <p><span>Problème avec le formulaire</span><input type="checkbox" id="bug_form" data-label="Problème formulaire"></p>
+        <p><span>Un souci avec les boutons</span><input type="checkbox" id="bug_boutons" data-label="Souci boutons"></p>
+
+        <textarea id="bugCommentaire" placeholder="Décrivez le problème (optionnel)..."></textarea>
+        <button type="button" class="bouton-envoyer" id="envoyerSignalement">Envoyer le signalement</button>
+    </div>
+</div>
+
+
+<div id="vues" class="parent">
+    <div style="text-align:center;margin-top:30px;">
+        <i class="fas fa-eye" id="declencheurAdmin" style="font-size:48px;background:none;color:#345;" title=""></i>
+        <h2>Nombre de visites</h2>
+        <p style="font-size:42px;font-weight:bolder;color:#345;" id="nombreVisites">...</p>
+        <p style="color:grey;">Merci de faire partie de cette étude !</p>
+    </div>
+</div>
+
+<div class="espace-chercheur" id="espaceChercheur">
+    <div class="panneau">
+        <i class="fas fa-times" id="fermerChercheur"></i>
+        <h4><i class="fas fa-database"></i> Espace chercheur</h4>
+        <p style="color:grey; font-size:13px;">Export des données collectées au format CSV (ouvrable dans Excel).</p>
+        <button type="button" id="exporterReponses">Exporter les réponses</button>
+        <button type="button" id="exporterAvis">Exporter les avis</button>
+        <button type="button" id="exporterSignalements">Exporter les signalements</button>
+        <button type="button" id="exporterVerbes">Exporter les verbes cités</button>
+    </div>
+</div>
+
+
+<div class="overlay" id="overlayBienvenue">
+    <div class="message">
+        <i class="fas fa-times" id="remover"></i>
+        <h2>Salut, bienvenue !</h2>
+        <p>Merci d'accorder un peu de votre temps à ce projet de recherche sur les verbes de localisation en anglais et en baoulé. Votre participation compte beaucoup pour l'avancement de cette étude.</p>
+    </div>
+</div>
+
+<div class="overlay-merci" id="overlayMerci">
+    <div class="message">
+        <i class="fas fa-times" id="fermerMerci"></i>
+        <img src="https://i.ibb.co/MkJs2LRv/check-mark-icon-vector-illustration-eps-10-1041137-167.jpg" alt="Confirmation">
+        <p>Vos réponses ont bien été soumises. Merci d'avoir participé à cette étude sur les verbes de localisation en anglais et en baoulé.</p>
+    </div>
+</div>
+
+<div class="overlay-form" id="overlayForm">
+    <form id="formulaireLocuteur">
+        <h2>Formulaire du locuteur</h2>
+        <small style="color:red;font-weight:bolder;">Uniquement Baoulé et Anglais</small>
+        <input type="text" id="champNom" placeholder="Nom complet..." required>
+        <input type="text" id="champProfession" placeholder="Profession..." required>
+        <button type="submit">Commencer le questionnaire</button>
+    </form>
+</div>
+
+
+<script>
+/* ---------- Utilitaires ---------- */
+
+function genererId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+async function enregistrer(prefixe, donnees) {
+    try {
+        const cle = `${prefixe}:${donnees.id}`;
+        localStorage.setItem(cle, JSON.stringify(donnees));
+        return true;
+    } catch (erreur) {
+        console.error("Erreur d'enregistrement :", erreur);
+        return false;
+    }
+}
+
+async function recupererToutesLesEntrees(prefixe) {
+    try {
+        const entrees = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const cle = localStorage.key(i);
+            if (cle && cle.startsWith(prefixe)) {
+                try {
+                    const val = localStorage.getItem(cle);
+                    if (val) entrees.push({ cle, ...JSON.parse(val) });
+                } catch (e) { /* entrée ignorée */ }
+            }
+        }
+        return entrees;
+    } catch (erreur) {
+        console.error("Erreur de lecture :", erreur);
+        return [];
+    }
+}
+
+function exporterCSV(nomFichier, donnees) {
+    if (!donnees.length) {
+        alert("Aucune donnée à exporter pour le moment.");
+        return;
+    }
+    const colonnes = Array.from(donnees.reduce((s, d) => {
+        Object.keys(d).forEach(k => { if (k !== "cle") s.add(k); });
+        return s;
+    }, new Set()));
+    const echapper = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const lignes = [colonnes.join(",")];
+    donnees.forEach(d => lignes.push(colonnes.map(c => echapper(d[c])).join(",")));
+    const csv = "\uFEFF" + lignes.join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const lien = document.createElement("a");
+    lien.href = URL.createObjectURL(blob);
+    lien.download = nomFichier;
+    document.body.appendChild(lien);
+    lien.click();
+    lien.remove();
+    URL.revokeObjectURL(lien.href);
+}
+
+function verifierMotDePasse() {
+    const mdp = prompt("Mot de passe chercheur :");
+    return mdp === "baoule2026";
+}
+
+/* Accès discret à l'espace chercheur : 5 clics rapides sur l'icône œil */
+let compteurClicsAdmin = 0;
+let minuteurClicsAdmin = null;
+const espaceChercheur = document.getElementById("espaceChercheur");
+
+document.getElementById("declencheurAdmin").addEventListener("click", () => {
+    compteurClicsAdmin++;
+    clearTimeout(minuteurClicsAdmin);
+    minuteurClicsAdmin = setTimeout(() => { compteurClicsAdmin = 0; }, 1500);
+    if (compteurClicsAdmin >= 5) {
+        compteurClicsAdmin = 0;
+        if (verifierMotDePasse()) espaceChercheur.classList.add("visible");
+    }
+});
+
+document.getElementById("fermerChercheur").addEventListener("click", () => {
+    espaceChercheur.classList.remove("visible");
+});
+
+/* ---------- Navigation fluide multi-pages & Historique ---------- */
+
+const parents = document.querySelectorAll(".parent");
+const items = document.querySelectorAll(".item");
+const boutonRetour = document.getElementById("boutonRetour");
+const pageLoader = document.getElementById("pageLoader");
+
+let historiquePages = ["home"];
+
+function chargerSection(targetId, estRetour = false) {
+    pageLoader.classList.add("active");
+
+    setTimeout(() => {
+        document.querySelector(".menu").classList.remove("visible");
+        
+        // Mettre à jour les éléments de menu actifs
+        items.forEach(e => e.classList.remove("active"));
+        const itemAssocie = document.querySelector(`.item[data-target="${targetId}"]`);
+        if(itemAssocie) itemAssocie.classList.add("active");
+
+        // Basculer la section visible
+        parents.forEach(p => p.classList.remove("active"));
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) targetElement.classList.add("active");
+
+        // Gérer l'historique de navigation
+        if (!estRetour && historiquePages[historiquePages.length - 1] !== targetId) {
+            historiquePages.push(targetId);
+        }
+
+        // Affichage du bouton Retour
+        if (targetId === "home") {
+            boutonRetour.classList.remove("visible");
+        } else {
+            boutonRetour.classList.add("visible");
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        pageLoader.classList.remove("active");
+    }, 200);
+}
+
+// Clics dans le menu
+items.forEach(i => {
+    i.addEventListener("click", () => {
+        const target = i.dataset.target;
+        chargerSection(target);
+    });
+});
+
+// Bouton Retour
+boutonRetour.addEventListener("click", () => {
+    if (historiquePages.length > 1) {
+        historiquePages.pop(); // Retirer la page actuelle
+        const pagePrecedente = historiquePages[historiquePages.length - 1];
+        chargerSection(pagePrecedente, true);
+    } else {
+        chargerSection("home", true);
+    }
+});
+
+document.getElementById("opener").addEventListener("click", () => {
+    document.querySelector(".menu").classList.add("visible");
+});
+
+document.getElementById("arrow").addEventListener("click", () => {
+    document.querySelector(".menu").classList.remove("visible");
+});
+
+/* ---------- Onglets Anglais / Baoulé (citer un verbe) ---------- */
+
+const listeOnglets = document.querySelectorAll(".liste");
+const conteneursVerbes = document.querySelectorAll(".conteneur-verbes");
+
+listeOnglets.forEach(l => {
+    l.addEventListener("click", () => {
+        listeOnglets.forEach(s => s.classList.remove("active"));
+        conteneursVerbes.forEach(c => c.classList.remove("active"));
+        l.classList.add("active");
+        document.getElementById(l.dataset.target).classList.add("active");
+        
+        // Ferme le clavier s'il était ouvert
+        document.getElementById("claviersBaoule").classList.remove("active");
+        document.getElementById("clavier").classList.remove("active");
+    });
+});
+
+/* ---------- Mode sombre ---------- */
+
+const mode = document.getElementById("mode");
+mode.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    mode.classList.toggle("active");
+    document.querySelector(".sombre").innerText = mode.classList.contains("active") ? "Activé" : "Désactivé";
+});
+
+/* ---------- Chevrons (police + signalement) ---------- */
+
+document.getElementById("chevronPoliceZone").addEventListener("click", () => {
+    document.getElementById("zonePolice").classList.toggle("active");
+    document.getElementById("chevronPolice").classList.toggle("active");
+});
+
+document.getElementById("signaler").addEventListener("click", () => {
+    document.getElementById("zoneSignalement").classList.toggle("active");
+    document.getElementById("chevronFlag").classList.toggle("active");
+});
+
+/* ---------- Recherche ---------- */
+
+const rechercher = document.querySelector(".rech");
+const champRecherche = document.getElementById("champRecherche");
+
+document.getElementById("search").addEventListener("click", (e) => {
+    e.stopPropagation();
+    document.querySelector(".menu").classList.remove("visible");
+    rechercher.classList.add("active");
+    champRecherche.focus();
+});
+
+document.getElementById("lancerRecherche").addEventListener("click", (e) => e.stopPropagation());
+rechercher.addEventListener("click", (e) => e.stopPropagation());
+
+document.addEventListener("click", () => {
+    if (rechercher.classList.contains("active")) {
+        rechercher.classList.remove("active");
+        champRecherche.value = "";
+        champRecherche.dispatchEvent(new Event("input"));
+    }
+});
+
+champRecherche.addEventListener("input", () => {
+    const terme = champRecherche.value.trim().toLowerCase();
+    document.querySelectorAll("#home .conteneur").forEach(bloc => {
+        const texte = bloc.textContent.toLowerCase();
+        bloc.style.display = (terme === "" || texte.includes(terme)) ? "" : "none";
+    });
+    document.querySelectorAll(".todo-liste li").forEach(li => {
+        const texte = li.textContent.toLowerCase();
+        li.style.display = (terme === "" || texte.includes(terme)) ? "" : "none";
+    });
+    document.querySelectorAll(".menu .item").forEach(el => {
+        const texte = el.textContent.toLowerCase();
+        el.style.display = (terme === "" || texte.includes(terme)) ? "" : "none";
+    });
+});
+
+/* ---------- Message de bienvenue puis formulaire du locuteur ---------- */
+
+const overlayBienvenue = document.getElementById("overlayBienvenue");
+const overlayForm = document.getElementById("overlayForm");
+const formulaireLocuteur = document.getElementById("formulaireLocuteur");
+const champNom = document.getElementById("champNom");
+const champProfession = document.getElementById("champProfession");
+let inscrit = false;
+
+window.addEventListener("load", () => {
+    overlayBienvenue.classList.add("active");
+});
+
+document.getElementById("remover").addEventListener("click", () => {
+    overlayBienvenue.classList.remove("active");
+    if (!inscrit) overlayForm.classList.add("active");
+});
+
+formulaireLocuteur.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!champNom.value.trim() || !champProfession.value.trim()) {
+        alert("Merci de remplir tous les champs pour continuer.");
+        return;
+    }
+    inscrit = true;
+    overlayForm.classList.remove("active");
+});
+
+/* ---------- Questionnaire : suivi, validation, soumission ---------- */
+
+const reponsesRadio = document.querySelectorAll('.conteneur input[type="radio"]');
+const groupesRadio = ["baoule_q1", "baoule_q2", "baoule_q3", "baoule_q4", "baoule_q5", "baoule_q6"];
+const selectsAnglais = ["anglais_q1", "anglais_q2", "anglais_q3", "anglais_q4", "anglais_q5"];
+const boutonSoumettre = document.getElementById("soumettreReponses");
+const overlayMerci = document.getElementById("overlayMerci");
+
+function verifierCompletion() {
+    const radiosOK = groupesRadio.filter(nom => document.querySelector(`input[name="${nom}"]:checked`)).length;
+    const selectsOK = selectsAnglais.filter(id => document.getElementById(id).value !== "...").length;
+    
+    const totalComplet = radiosOK + selectsOK;
+    const totalQuestions = groupesRadio.length + selectsAnglais.length;
+    const pourcentage = Math.round((totalComplet / totalQuestions) * 100);
+
+    // Mettre à jour la barre de progression
+    document.getElementById("barreProgression").style.width = pourcentage + "%";
+    document.getElementById("texteProgression").textContent = pourcentage + "%";
+
+    const complet = (totalComplet === totalQuestions);
+    boutonSoumettre.disabled = !complet;
+    boutonSoumettre.classList.toggle("pret", complet);
+}
+
+reponsesRadio.forEach(radio => {
+    radio.addEventListener("click", (e) => {
+        if (!inscrit) {
+            e.preventDefault();
+            overlayForm.classList.add("active");
+        }
+    });
+    radio.addEventListener("change", () => {
+        const groupe = radio.closest(".bordure");
+        if (groupe) groupe.querySelectorAll(".element").forEach(el => el.classList.remove("selectionne"));
+        radio.closest(".element").classList.add("selectionne");
+        verifierCompletion();
+    });
+});
+
+selectsAnglais.forEach(id => {
+    document.getElementById(id).addEventListener("change", verifierCompletion);
+});
+
+boutonSoumettre.addEventListener("click", async () => {
+    if (boutonSoumettre.disabled) return;
+    const reponse = {
+        id: genererId(),
+        date: new Date().toISOString(),
+        nom: champNom.value.trim(),
+        profession: champProfession.value.trim(),
+    };
+    groupesRadio.forEach(nom => {
+        const coche = document.querySelector(`input[name="${nom}"]:checked`);
+        reponse[nom] = coche ? coche.value : "";
+    });
+    selectsAnglais.forEach(id => {
+        reponse[id] = document.getElementById(id).value;
+    });
+    await enregistrer("reponse", reponse);
+    overlayMerci.classList.add("active");
+});
+
+document.getElementById("fermerMerci").addEventListener("click", () => {
+    overlayMerci.classList.remove("active");
+});
+
+/* ---------- Compteur de visites ---------- */
+
+async function compterVisite() {
+    const affichage = document.getElementById("nombreVisites");
+    try {
+        let visites = 0;
+        const valeurActuelle = localStorage.getItem("compteur-visites");
+        visites = valeurActuelle ? parseInt(valeurActuelle, 10) || 0 : 0;
+        visites += 1;
+        localStorage.setItem("compteur-visites", String(visites));
+        affichage.textContent = visites;
+    } catch (erreur) {
+        console.error("Erreur du compteur de visites :", erreur);
+        affichage.textContent = "—";
+    }
+}
+compterVisite();
+
+/* ---------- Police et taille de texte ---------- */
+
+document.querySelectorAll('input[name="texte"]').forEach(radio => {
+    radio.addEventListener("change", () => { document.body.style.fontFamily = radio.value; });
+});
+
+document.querySelectorAll('input[name="taille"]').forEach(radio => {
+    radio.addEventListener("change", () => { document.body.style.fontSize = radio.value + "px"; });
+});
+
+/* ---------- Avis sur le thème ---------- */
+
+const avisTexte = document.getElementById("avisTexte");
+const compteurAvis = document.getElementById("compteurAvis");
+const envoyerAvis = document.getElementById("envoyerAvis");
+const avisConfirmation = document.getElementById("avisConfirmation");
+const LIMITE_AVIS = 500;
+
+avisTexte.addEventListener("input", () => {
+    const longueur = avisTexte.value.length;
+    compteurAvis.textContent = `${longueur} / ${LIMITE_AVIS} caractères`;
+    envoyerAvis.disabled = avisTexte.value.trim().length === 0;
+    avisConfirmation.classList.remove("active");
+});
+
+envoyerAvis.addEventListener("click", async () => {
+    if (avisTexte.value.trim().length === 0) return;
+    const avis = { id: genererId(), date: new Date().toISOString(), texte: avisTexte.value.trim() };
+    await enregistrer("avis", avis);
+    avisConfirmation.classList.add("active");
+    avisTexte.value = "";
+    compteurAvis.textContent = `0 / ${LIMITE_AVIS} caractères`;
+    envoyerAvis.disabled = true;
+    setTimeout(() => avisConfirmation.classList.remove("active"), 3000);
+});
+
+/* ---------- Clavier Baoulé ---------- */
+
+document.getElementById("clavier").addEventListener("click", () => {
+    document.getElementById("claviersBaoule").classList.toggle("active");
+    document.getElementById("clavier").classList.toggle("active");
+});
+
+let dernierChampBaoule = document.getElementById("verbeBaouleInput");
+document.querySelectorAll("#baoule input[type='text']").forEach(champ => {
+    champ.addEventListener("focus", () => { dernierChampBaoule = champ; });
+});
+
+function inserer(texte) {
+    const champ = dernierChampBaoule || document.getElementById("verbeBaouleInput");
+    const debut = champ.selectionStart ?? champ.value.length;
+    const fin = champ.selectionEnd ?? champ.value.length;
+    champ.value = champ.value.slice(0, debut) + texte + champ.value.slice(fin);
+    const position = debut + texte.length;
+    champ.focus();
+    champ.setSelectionRange(position, position);
+}
+
+document.querySelectorAll("#claviersBaoule .btn").forEach(bouton => {
+    if (bouton.id === "btnEspace" || bouton.id === "btnEffacer") return;
+    bouton.addEventListener("click", () => inserer(bouton.textContent));
+});
+
+document.getElementById("btnEspace").addEventListener("click", () => inserer(" "));
+
+document.getElementById("btnEffacer").addEventListener("click", () => {
+    const champ = dernierChampBaoule || document.getElementById("verbeBaouleInput");
+    const debut = champ.selectionStart ?? champ.value.length;
+    const fin = champ.selectionEnd ?? champ.value.length;
+    if (debut === fin && debut > 0) {
+        champ.value = champ.value.slice(0, debut - 1) + champ.value.slice(fin);
+        champ.focus();
+        champ.setSelectionRange(debut - 1, debut - 1);
+    } else {
+        champ.value = champ.value.slice(0, debut) + champ.value.slice(fin);
+        champ.focus();
+        champ.setSelectionRange(debut, debut);
+    }
+});
+
+/* ---------- Liste "verbes cités" (Anglais / Baoulé) ---------- */
+
+function ligneVerbe(ul, v) {
+    const li = document.createElement("li");
+    li.dataset.cle = v.cle;
+    if (v.fait) li.classList.add("fait");
+
+    const contenu = document.createElement("div");
+    contenu.className = "contenu-verbe";
+
+    const caseFait = document.createElement("input");
+    caseFait.type = "checkbox";
+    caseFait.checked = !!v.fait;
+    caseFait.title = "Marquer comme vérifié";
+    caseFait.addEventListener("change", async () => {
+        li.classList.toggle("fait", caseFait.checked);
+        const nouvellesDonnees = { id: v.id, langue: v.langue, verbe: v.verbe, date: v.date, fait: caseFait.checked };
+        v.fait = caseFait.checked;
+        try { localStorage.setItem(v.cle, JSON.stringify(nouvellesDonnees)); } catch (e) { /* ignoré */ }
+    });
+
+    const span = document.createElement("span");
+    span.textContent = v.verbe;
+
+    contenu.append(caseFait, span);
+
+    const supprimer = document.createElement("i");
+    supprimer.className = "fas fa-times";
+    supprimer.title = "Supprimer";
+    supprimer.addEventListener("click", async () => {
+        try { localStorage.removeItem(v.cle); } catch (e) { /* ignoré */ }
+        li.remove();
+        const ulVide = ul.querySelectorAll("li").length === 0;
+        if (ulVide) ul.innerHTML = `<li class="vide">Aucun verbe cité pour l'instant.</li>`;
+    });
+
+    li.append(contenu, supprimer);
+    ul.appendChild(li);
+}
+
+async function chargerVerbes() {
+    const tous = await recupererToutesLesEntrees("verbe:");
+    ["anglais", "baoule"].forEach(langue => {
+        const ul = document.querySelector(`.todo-liste[data-verbes="${langue}"]`);
+        if (!ul) return;
+        ul.innerHTML = "";
+        const items = tous.filter(v => v.langue === langue);
+        if (!items.length) {
+            ul.innerHTML = `<li class="vide">Aucun verbe cité pour l'instant.</li>`;
+            return;
+        }
+        items.forEach(v => ligneVerbe(ul, v));
+    });
+}
+chargerVerbes();
+
+async function ajouterVerbe(champInput, langue) {
+    const valeur = champInput.value.trim();
+    if (!valeur) { champInput.focus(); return; }
+    const id = genererId();
+    const cle = `verbe:${id}`;
+    const donnees = { id, langue, verbe: valeur, date: new Date().toISOString(), fait: false };
+    localStorage.setItem(cle, JSON.stringify(donnees));
+    const ul = document.querySelector(`.todo-liste[data-verbes="${langue}"]`);
+    const videExistant = ul.querySelector(".vide");
+    if (videExistant) videExistant.remove();
+    ligneVerbe(ul, { ...donnees, cle });
+    champInput.value = "";
+    champInput.focus();
+}
+
+const verbeAnglaisInput = document.getElementById("verbeAnglaisInput");
+document.getElementById("ajouterVerbeAnglais").addEventListener("click", () => ajouterVerbe(verbeAnglaisInput, "anglais"));
+verbeAnglaisInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); ajouterVerbe(verbeAnglaisInput, "anglais"); } });
+
+const verbeBaouleInput = document.getElementById("verbeBaouleInput");
+document.getElementById("ajouterVerbeBaoule").addEventListener("click", () => ajouterVerbe(verbeBaouleInput, "baoule"));
+verbeBaouleInput.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); ajouterVerbe(verbeBaouleInput, "baoule"); } });
+
+/* ---------- Rapport de bugs / signalement ---------- */
+
+document.getElementById("envoyerSignalement").addEventListener("click", async () => {
+    const cases = Array.from(document.querySelectorAll('#flag input[type="checkbox"]:checked')).map(c => c.dataset.label);
+    const commentaire = document.getElementById("bugCommentaire").value.trim();
+    if (!cases.length && !commentaire) {
+        alert("Merci de cocher au moins une case ou d'ajouter un commentaire.");
+        return;
+    }
+    const signalement = {
+        id: genererId(),
+        date: new Date().toISOString(),
+        elements: cases.join(" | "),
+        commentaire
+    };
+    const ok = await enregistrer("signalement", signalement);
+    if (ok) {
+        document.querySelectorAll('#flag input[type="checkbox"]').forEach(c => c.checked = false);
+        document.getElementById("bugCommentaire").value = "";
+        alert("Merci, votre signalement a bien été envoyé.");
+    }
+});
+
+/* ---------- Espace chercheur : export CSV ---------- */
+
+document.getElementById("exporterReponses").addEventListener("click", async () => {
+    exporterCSV("reponses_questionnaire.csv", await recupererToutesLesEntrees("reponse:"));
+});
+
+document.getElementById("exporterAvis").addEventListener("click", async () => {
+    exporterCSV("avis_participants.csv", await recupererToutesLesEntrees("avis:"));
+});
+
+document.getElementById("exporterSignalements").addEventListener("click", async () => {
+    exporterCSV("signalements_bugs.csv", await recupererToutesLesEntrees("signalement:"));
+});
+
+document.getElementById("exporterVerbes").addEventListener("click", async () => {
+    exporterCSV("verbes_cites.csv", await recupererToutesLesEntrees("verbe:"));
+});
+</script>
+
+</body>
+</html>
