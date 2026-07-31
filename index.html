@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collecte de données - Verbes de localisation</title>
+    <title>Collecte de données - Verbes de positionnement</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
     
     <!-- Bibliothèques pour l'exportation PDF et Excel -->
@@ -1580,26 +1580,30 @@
             }
         });
 
-        // Collecte des données pour l'Admin
+        // Collecte complète des données pour l'Admin
         function collectData() {
             const data = [
                 { Champ: "Nom complet du locuteur", Valeur: currentSpeaker.name || "Non renseigné" },
                 { Champ: "Profession du locuteur", Valeur: currentSpeaker.job || "Non renseigné" }
             ];
 
+            // Partie 1 : Choix + Justification du verbe Baoulé
             for(let i = 1; i <= 6; i++) {
                 const selected = document.querySelector(`input[name="b_choix${i}"]:checked`);
-                const justif = document.getElementById(`justif_${i}`);
+                const justifSelect = document.getElementById(`justif_${i}`);
+
                 data.push({
-                    Champ: `Partie 1 (Baoulé) - Q${i}`,
+                    Champ: `Partie 1 (Baoulé) - Q${i} Choix verbe`,
                     Valeur: selected ? selected.value : "Aucune réponse"
                 });
+
                 data.push({
-                    Champ: `Partie 1 (Baoulé) - Justification Q${i}`,
-                    Valeur: justif && justif.value ? justif.value : "Non spécifiée"
+                    Champ: `Partie 1 (Baoulé) - Q${i} Justification verbe`,
+                    Valeur: (justifSelect && justifSelect.value) ? justifSelect.value : "Non spécifiée"
                 });
             }
 
+            // Partie 2 : Anglais
             for(let i = 1; i <= 5; i++) {
                 const select = document.getElementById(`eng_${i}`);
                 data.push({
@@ -1608,15 +1612,31 @@
                 });
             }
 
+            // Partie 3 : Matching
             const matchLabels = ["To sit", "To lie", "To be", "To lay", "To stand"];
             for(let i = 1; i <= 5; i++) {
                 const select = document.getElementById(`match_${i}`);
                 data.push({
-                    Champ: `Partie 3 - ${matchLabels[i-1]}`,
+                    Champ: `Partie 3 - Matching (${matchLabels[i-1]})`,
                     Valeur: select && select.value ? select.value : "Aucune réponse"
                 });
             }
 
+            // Verbes ajoutés manuellement (Onglet Verbes)
+            const listAnglais = Array.from(document.querySelectorAll("#listAnglais li span")).map(el => el.textContent.trim());
+            const listBaoule = Array.from(document.querySelectorAll("#listBaoule li span")).map(el => el.textContent.trim());
+
+            data.push({
+                Champ: "Verbes Anglais ajoutés",
+                Valeur: listAnglais.length > 0 ? listAnglais.join(", ") : "Aucun"
+            });
+
+            data.push({
+                Champ: "Verbes Baoulé ajoutés",
+                Valeur: listBaoule.length > 0 ? listBaoule.join(", ") : "Aucun"
+            });
+
+            // Avis / Remarques
             const avis = document.getElementById("avisInput").value.trim();
             data.push({ Champ: "Avis / Remarques", Valeur: avis || "Aucun avis" });
 
@@ -1647,7 +1667,7 @@
         // Exportation vers PDF
         document.getElementById("btnExportPDF").addEventListener("click", () => {
             const { jsPDF } = window.jspdf;
-            doc = new jsPDF();
+            const doc = new jsPDF();
             
             const element = document.getElementById("adminDataContainer");
             html2canvas(element).then(canvas => {
