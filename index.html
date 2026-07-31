@@ -10,6 +10,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Bibliothèques pour l'exportation PDF et Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
         :root {
@@ -1663,8 +1669,46 @@
             XLSX.utils.book_append_sheet(workbook, worksheet, "Réponses");
             XLSX.writeFile(workbook, "donnees_collectees_baoule_anglais.xlsx");
         });
+        // Exportation vers PDF avec gestion automatique des pages (jsPDF AutoTable)
+        document.getElementById("btnExportPDF").addEventListener("click", () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-        // Exportation vers PDF
+            // Titre du document
+            doc.setFontSize(16);
+            doc.setTextColor(51, 68, 102);
+            doc.text("Rapport des données collectées", 14, 15);
+
+            // Récupération des données dynamiques
+            const data = collectData();
+            const tableBody = data.map(item => [item.Champ, item.Valeur]);
+
+            // Génération du tableau paginé
+            doc.autoTable({
+                startY: 22,
+                head: [['Champ / Question', 'Valeur Saisie']],
+                body: tableBody,
+                theme: 'striped',
+                headStyles: {
+                    fillColor: [51, 68, 102],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 3,
+                    overflow: 'linebreak'
+                },
+                columnStyles: {
+                    0: { cellWidth: 90, fontStyle: 'bold' },
+                    1: { cellWidth: 90 }
+                }
+            });
+
+            doc.save("donnees_collectees_baoule_anglais.pdf");
+        });
+
+        /*// Exportation vers PDF
         document.getElementById("btnExportPDF").addEventListener("click", () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -1681,7 +1725,7 @@
                 doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
                 doc.save("donnees_collectees_baoule_anglais.pdf");
             });
-        });
+        });*/
     </script>
 </body>
 </html>
