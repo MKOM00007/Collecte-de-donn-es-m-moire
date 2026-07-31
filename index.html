@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -8,11 +8,6 @@
     
     <!-- Bibliothèques pour l'exportation PDF et Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Bibliothèques pour l'exportation PDF et Excel -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -65,7 +60,6 @@
             margin: 0;
         }
         
-        /* Écran d'animation de chargement (Loader) */
         .page-loader {
             position: fixed;
             inset: 0;
@@ -108,7 +102,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Bouton Retour dans les sous-pages */
         .btn-back-container {
             margin-bottom: 15px;
         }
@@ -181,7 +174,6 @@
             width: 90%;
         }
 
-        /* Progress Bar Questionnaire */
         .quiz-progress-container {
             width: 95%;
             background-color: rgba(255, 255, 255, 0.2);
@@ -196,7 +188,6 @@
             transition: width 0.3s ease;
         }
 
-        /* Menu-Bas */
         .menu-bas {
             position: fixed;  
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1); 
@@ -239,7 +230,6 @@
             color: var(--primary-color);
         }
 
-        /* Data-Target Conteneurs */
         .conteneur {
             margin-top: 90px;
             display: none;
@@ -367,7 +357,6 @@
             opacity: 0.6;
         }
 
-        /* Section Avis */
         .avis-section {
             background: var(--card-bg);
             padding: 16px;
@@ -402,7 +391,6 @@
             }
         }
 
-        /* Menu / Paramètres */
         #list {
             background: var(--card-bg);
             padding: 16px;
@@ -503,7 +491,6 @@
             flex: 1;
         }
 
-        /* Onglet Verbes */
         #pen .contour {
             text-align: center;
             margin-bottom: 16px;
@@ -627,7 +614,6 @@
             cursor: pointer;
         }
 
-        /* Onglet Signaler */
         #flag {
             background: var(--card-bg);
             padding: 16px;
@@ -672,7 +658,6 @@
             width: 100%;
         }
 
-        /* Style Espace Admin */
         #admin {
             background: var(--card-bg);
             padding: 20px;
@@ -785,7 +770,6 @@
 </head>
 <body>
    
-    <!-- Loader de transition de page -->
     <div class="page-loader" id="pageLoader">
         <div class="spinner"></div>
         <span style="margin-top:10px; font-weight:bold;">Chargement...</span>
@@ -798,7 +782,6 @@
         </div>
     </header>
 
-    <!-- Overlay Formulaire Locuteur -->
     <div class="overlay-form">
         <form id="speakerForm">
             <h2>Formulaire du locuteur</h2>
@@ -809,7 +792,6 @@
         </form>
     </div>
        
-    <!-- Menu-bas -->  
     <div class="menu-bas" id="menuBas">
         <div class="item active" data-target="home"><i class="fas fa-home"></i><br>Accueil</div>   
         <div class="item" data-target="pen"><i class="fas fa-pen"></i><br>Verbe</div>   
@@ -818,7 +800,6 @@
         <div class="item" data-target="list"><i class="fas fa-gear"></i><br>Paramètre</div>   
     </div>
 
-    <!-- Data-target-HOME --> 
     <div class="conteneur active" id="home">
         <div class="sujet">
             <h4>Thème :</h4> "A comparative analysis of verbs of location in English and Baoulé"
@@ -1113,7 +1094,6 @@
         <button class="reponse-btn" id="btnSubmitForm" disabled>Envoyer toutes mes réponses</button>
     </div>
 
-    <!-- Data-target-PEN --> 
     <div class="conteneur" id="pen"><br>
         <div class="btn-back-container">
             <button class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left"></i> Retour</button>
@@ -1191,7 +1171,6 @@
         </div>
     </div>
 
-    <!-- Data-target-BOOK --> 
     <div class="conteneur" id="book"><br>
         <div class="btn-back-container" style="text-align: left;">
             <button class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left"></i> Retour</button>
@@ -1209,7 +1188,6 @@
         </div> 
     </div>
 
-    <!-- Data-target-FLAG --> 
     <div class="conteneur" id="flag">
         <div class="btn-back-container">
             <button class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left"></i> Retour</button>
@@ -1239,7 +1217,6 @@
         <button>Envoyer</button>
     </div>  
 
-    <!-- Data-target-MENU/LIST --> 
     <div class="conteneur" id="list">
         <div class="btn-back-container">
             <button class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left" style="background:0; margin:0; padding:0;"></i> Retour</button>
@@ -1273,7 +1250,6 @@
         </div>
     </div>
 
-    <!-- Data-target-ADMIN -->
     <div class="conteneur" id="admin">
         <div class="btn-back-container">
             <button class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left"></i> Retour</button>
@@ -1301,7 +1277,6 @@
                         </tr>
                     </thead>
                     <tbody id="tableBody">
-                        <!-- Rempli en JS -->
                     </tbody>
                 </table>
             </div>
@@ -1309,14 +1284,15 @@
     </div>
 
     <script>
-        // Stockage des réponses utilisateur
+        // === URL DU SCRIPT GOOGLE APPS SCRIPT ===
+        // Remplace la chaîne de caractères ci-dessous par ton lien déployé Google Apps Script
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMKr19ywnzaJxeVtASnD_aYpM4V7uR8aNyY96u6HwgIqGjUPQz0iKf_O60rOp-fqGS/exec";
+
         let currentSpeaker = { name: "", job: "" };
         const ADMIN_CODE = "baoule2026"; 
 
-        // Historique de navigation pour le bouton Retour
         const pageHistory = ['home'];
 
-        // --- COMPTEUR DE VISITEURS ---
         function initVisitorCounter() {
             const displayTrigger = document.getElementById("secretAdminTrigger");
             let localViews = parseInt(localStorage.getItem('page_views') || 0) + 1;
@@ -1330,9 +1306,7 @@
                         displayTrigger.textContent = data.value;
                     }
                 })
-                .catch(err => {
-                    // Fallback sur le compteur local en cas d'erreur de serveur externe
-                });
+                .catch(err => {});
         }
 
         function isTextInputField(element) {
@@ -1358,7 +1332,6 @@
             }
         });
 
-        // Fonction de chargement avec animation (Loader)
         function triggerPageTransition(targetId, addToHistory = true) {
             const loader = document.getElementById("pageLoader");
             loader.classList.add("active");
@@ -1392,7 +1365,6 @@
             }, 300);
         }
 
-        // Action Bouton Retour
         function goBack() {
             if (pageHistory.length > 1) {
                 pageHistory.pop(); 
@@ -1403,7 +1375,6 @@
             }
         }
 
-        // Navigation Onglets du bas
         const item = document.querySelectorAll(".item"); 
         item.forEach(t => {
             t.addEventListener("click", () => {
@@ -1414,7 +1385,6 @@
             });
         });  
 
-        // Basculer Verbes Anglais / Baoulé
         const btn = document.querySelectorAll(".contour .btn");
         const verb = document.querySelectorAll(".verb");
              
@@ -1428,13 +1398,11 @@
             });
         });   
 
-        // Affichage Accordéon Visiteurs
         document.getElementById("vue").addEventListener("click", () => {
             document.querySelector(".nombre-vue").classList.toggle("active");
             document.querySelector(".fa-chevron-down").classList.toggle("active");
         });      
 
-        // Déclencheur secret Espace Admin (10 clics)
         let clickCount = 0;
         let clickTimer;
         const trigger = document.getElementById("secretAdminTrigger");
@@ -1454,25 +1422,22 @@
             }
         });
 
-        // Mode Sombre (Dark Mode)
         const darkModeToggle = document.getElementById("darkModeToggle");
         darkModeToggle.addEventListener("click", () => {
             document.body.classList.toggle("dark-mode");
         });
 
-        // Contrôle Dynamique de la Taille du Texte
         const fontSizeSlider = document.getElementById("fontSizeSlider");
         fontSizeSlider.addEventListener("input", (e) => {
             document.documentElement.style.setProperty('--font-base', e.target.value + 'px');
         });
 
-        // Barre de progression du Questionnaire & Activation Envoi
         const quizInputs = document.querySelectorAll('.quiz-input');
         const quizProgressBar = document.getElementById('quizProgress');
         const btnSubmitForm = document.getElementById('btnSubmitForm');
 
         function updateProgress() {
-            const totalGroups = 22; // 6 choix + 6 justifications + 5 anglais + 5 matching
+            const totalGroups = 22; 
             let completed = 0;
 
             for(let i = 1; i <= 6; i++) {
@@ -1499,7 +1464,6 @@
             input.addEventListener('input', updateProgress);
         });
 
-        // Overlay Formulaire Locuteur
         window.addEventListener('load', () => {
             document.querySelector(".overlay-form").classList.add("active");
             initVisitorCounter();
@@ -1522,7 +1486,6 @@
             }
         });
 
-        // Clavier Virtuel Baoulé
         let isCaps = false;
 
         function insertChar(char) {
@@ -1550,7 +1513,6 @@
             document.getElementById('capsIcon').style.color = isCaps ? 'orange' : 'inherit';
         }
 
-        // To-Do List Verbes
         function createTodoList(inputId, listId, buttonId) {
             const input = document.getElementById(inputId);
             const list = document.getElementById(listId);
@@ -1570,12 +1532,75 @@
         createTodoList("inputAnglais", "listAnglais", "addAnglais");
         createTodoList("inputBaoule", "listBaoule", "addBaoule");
 
-        // Action d'envoi des réponses
+        // === EXTRACTION ET STRUCTURATION DES DONNÉES EN LIGNE (POUR GOOGLE SHEETS) ===
+        function getRowDataArray() {
+            const row = [];
+
+            // 1. Nom & Profession
+            row.push(currentSpeaker.name || "Non renseigné");
+            row.push(currentSpeaker.job || "Non renseigné");
+
+            // 2. Partie 1 Baoulé (6 questions : choix + justification)
+            for(let i = 1; i <= 6; i++) {
+                const selected = document.querySelector(`input[name="b_choix${i}"]:checked`);
+                const justifSelect = document.getElementById(`justif_${i}`);
+                row.push(selected ? selected.value : "");
+                row.push((justifSelect && justifSelect.value) ? justifSelect.value : "");
+            }
+
+            // 3. Partie 2 Anglais (5 questions)
+            for(let i = 1; i <= 5; i++) {
+                const select = document.getElementById(`eng_${i}`);
+                row.push(select && select.value ? select.value : "");
+            }
+
+            // 4. Partie 3 Matching (5 questions)
+            for(let i = 1; i <= 5; i++) {
+                const select = document.getElementById(`match_${i}`);
+                row.push(select && select.value ? select.value : "");
+            }
+
+            // 5. Verbes ajoutés
+            const listAnglais = Array.from(document.querySelectorAll("#listAnglais li span")).map(el => el.textContent.trim());
+            const listBaoule = Array.from(document.querySelectorAll("#listBaoule li span")).map(el => el.textContent.trim());
+            row.push(listAnglais.join(", "));
+            row.push(listBaoule.join(", "));
+
+            // 6. Avis
+            const avis = document.getElementById("avisInput").value.trim();
+            row.push(avis);
+
+            return row;
+        }
+
+        // === ACTION D'ENVOI EN LIGNE ET ENREGISTREMENT LOCAL ===
         btnSubmitForm.addEventListener('click', () => {
-            alert("Merci ! Vos réponses ont été enregistrées localement pour l'administration.");
+            const reponsesArray = getRowDataArray();
+
+            // Modification de l'état du bouton pendant l'envoi
+            btnSubmitForm.disabled = true;
+            btnSubmitForm.textContent = "Envoi en cours...";
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ reponses: reponsesArray })
+            })
+            .then(() => {
+                alert("Succès ! Vos réponses ont été envoyées dans le Google Sheet.");
+                btnSubmitForm.textContent = "Réponses envoyées avec succès";
+            })
+            .catch((error) => {
+                console.error("Erreur d'envoi :", error);
+                alert("Vos réponses ont été enregistrées localement (Erreur de réseau vers Google Sheet).");
+                btnSubmitForm.disabled = false;
+                btnSubmitForm.textContent = "Envoyer toutes mes réponses";
+            });
         });
 
-        // Authentification Admin
         document.getElementById("btnAdminLogin").addEventListener("click", () => {
             const pass = document.getElementById("adminPass").value;
             if (pass === ADMIN_CODE) {
@@ -1587,14 +1612,12 @@
             }
         });
 
-        // Collecte complète des données pour l'Admin
         function collectData() {
             const data = [
                 { Champ: "Nom complet du locuteur", Valeur: currentSpeaker.name || "Non renseigné" },
                 { Champ: "Profession du locuteur", Valeur: currentSpeaker.job || "Non renseigné" }
             ];
 
-            // Partie 1 : Choix + Justification du verbe Baoulé
             for(let i = 1; i <= 6; i++) {
                 const selected = document.querySelector(`input[name="b_choix${i}"]:checked`);
                 const justifSelect = document.getElementById(`justif_${i}`);
@@ -1610,7 +1633,6 @@
                 });
             }
 
-            // Partie 2 : Anglais
             for(let i = 1; i <= 5; i++) {
                 const select = document.getElementById(`eng_${i}`);
                 data.push({
@@ -1619,7 +1641,6 @@
                 });
             }
 
-            // Partie 3 : Matching
             const matchLabels = ["To sit", "To lie", "To be", "To lay", "To stand"];
             for(let i = 1; i <= 5; i++) {
                 const select = document.getElementById(`match_${i}`);
@@ -1629,7 +1650,6 @@
                 });
             }
 
-            // Verbes ajoutés manuellement (Onglet Verbes)
             const listAnglais = Array.from(document.querySelectorAll("#listAnglais li span")).map(el => el.textContent.trim());
             const listBaoule = Array.from(document.querySelectorAll("#listBaoule li span")).map(el => el.textContent.trim());
 
@@ -1643,7 +1663,6 @@
                 Valeur: listBaoule.length > 0 ? listBaoule.join(", ") : "Aucun"
             });
 
-            // Avis / Remarques
             const avis = document.getElementById("avisInput").value.trim();
             data.push({ Champ: "Avis / Remarques", Valeur: avis || "Aucun avis" });
 
@@ -1662,7 +1681,6 @@
             });
         }
 
-        // Exportation vers Excel
         document.getElementById("btnExportExcel").addEventListener("click", () => {
             const data = collectData();
             const worksheet = XLSX.utils.json_to_sheet(data);
@@ -1670,21 +1688,18 @@
             XLSX.utils.book_append_sheet(workbook, worksheet, "Réponses");
             XLSX.writeFile(workbook, "donnees_collectees_baoule_anglais.xlsx");
         });
-        // Exportation vers PDF avec gestion automatique des pages (jsPDF AutoTable)
+
         document.getElementById("btnExportPDF").addEventListener("click", () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            // Titre du document
             doc.setFontSize(16);
             doc.setTextColor(51, 68, 102);
             doc.text("Rapport des données collectées", 14, 15);
 
-            // Récupération des données dynamiques
             const data = collectData();
             const tableBody = data.map(item => [item.Champ, item.Valeur]);
 
-            // Génération du tableau paginé
             doc.autoTable({
                 startY: 22,
                 head: [['Champ / Question', 'Valeur Saisie']],
@@ -1708,25 +1723,6 @@
 
             doc.save("donnees_collectees_baoule_anglais.pdf");
         });
-
-        /*// Exportation vers PDF
-        document.getElementById("btnExportPDF").addEventListener("click", () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            const element = document.getElementById("adminDataContainer");
-            html2canvas(element).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 190;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let position = 20;
-
-                doc.setFontSize(16);
-                doc.text("Rapport des données collectées", 10, 10);
-                doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                doc.save("donnees_collectees_baoule_anglais.pdf");
-            });
-        });*/
     </script>
 </body>
 </html>
