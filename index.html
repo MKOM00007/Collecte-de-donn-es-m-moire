@@ -337,6 +337,65 @@
             font-weight: bold;
         }
 
+        .section4 {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: var(--box-shadow);
+            margin-top: 24px;
+            text-align: left;
+        }
+
+        .section4 h3 {
+            margin-top: 0;
+            color: var(--header-bg);
+        }
+
+        body.dark-mode .section4 h3 {
+            color: var(--primary-color);
+        }
+
+        .echelle {
+            background: rgba(255, 165, 0, 0.08);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+        }
+
+        .echelle p {
+            margin: 4px 0;
+            display: inline-block;
+            margin-right: 12px;
+        }
+
+        .q-block {
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+            background: var(--card-bg);
+        }
+
+        .q-block p {
+            margin: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .q-options {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .q-options label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
         .reponse-btn {
             background: var(--primary-color);
             color: white;
@@ -1039,51 +1098,120 @@
                     <option value="Taka">Taka</option><option value="Nannan">Nannan</option><option value="Djin">Djin</option><option value="Ti/Tran">Ti/Tran</option><option value="La">La</option><option value="Sié">Sié</option>
                 </select>
             </div>
-<div class="section4">
-<h3>Partie 4:Usage et perception des verbes de positionnement</div>
-
-Consigne : Cochez la réponse qui correspond le mieux à votre opinion.
-
-<div class="echelle">Échelle : 
-<p>1 = Pas du tout d’accord</p>
-<p> 2 = Pas d’accord</p>
-<p>3 = Neutre </p> 
-<p>4 = D’accord </p>
-<p>5 = Tout à fait d’accord</p>
-
-<div class="borduire">Je fais une différence entre un objet debout, couché ou posé lorsque je parle en baoulé.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4">
-</div>
-
-<div class="borduire">Je fais une différence entre stand, lie, sit et be lorsque je parle en anglais.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4">
-<div class="borduire">
-Le baoulé exprime la position des objets de manière plus précise que l’anglais.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4">
-</div>
-
-<di class="borduire">L’anglais exprime la position des objets de manière plus précise que le baoulé.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4"></div>
-
-<div class="borduire">Je trouve difficile de choisir entre sit, stand et lie en anglais.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4"></div>
-
-<div class="borduire">Je traduis souvent le verbe anglais be par différents verbes en baoulé selon la position de l’objet.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4"></div>
-
-<div class="borduire">Le contexte est nécessaire pour comprendre correctement la localisation en baoulé.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4"></div>
-
-<div class="borduire">Le contexte est nécessaire pour comprendre correctement la localisation en anglais.
-1 <input type="radio" name="choix4">  2 <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  4 <input type="radio" name="choix4">  5 <input type="radio" name="choix4"></div>
-
-<div class="borduire">Dans quelles situations utilisez-vous le plus des verbes spécifiques de localisation (debout, couché, assis, posé, suspendu, etc.) ?
-Debout <input type="radio" name="choix4">  Couché <input type="radio" name="choix4">  3 <input type="radio" name="choix4">  Assis <input type="radio" name="choix4">  Posé <input type="radio" name="choix4"></div>
-
-</div>
-            
         </div>
 
+        <div class="section4">
+            <h3>Partie 4 : Usage et perception des verbes de positionnement</h3>
+            <p style="margin-bottom:12px;"><strong>Consigne :</strong> Cochez la réponse qui correspond le mieux à votre opinion.</p>
+
+            <div class="echelle">
+                <strong>Échelle :</strong>
+                <p>1 = Pas du tout d’accord</p>
+                <p>2 = Pas d’accord</p>
+                <p>3 = Neutre</p>
+                <p>4 = D’accord</p>
+                <p>5 = Tout à fait d’accord</p>
+            </div>
+
+            <div class="q-block">
+                <p>1. Je fais une différence entre un objet debout, couché ou posé lorsque je parle en baoulé.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q1" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q1" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q1" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q1" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q1" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>2. Je fais une différence entre stand, lie, sit et be lorsque je parle en anglais.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q2" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q2" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q2" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q2" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q2" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>3. Le baoulé exprime la position des objets de manière plus précise que l’anglais.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q3" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q3" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q3" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q3" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q3" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>4. L’anglais exprime la position des objets de manière plus précise que le baoulé.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q4" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q4" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q4" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q4" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q4" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>5. Je trouve difficile de choisir entre sit, stand et lie en anglais.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q5" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q5" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q5" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q5" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q5" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>6. Je traduis souvent le verbe anglais be par différents verbes en baoulé selon la position de l’objet.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q6" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q6" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q6" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q6" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q6" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>7. Le contexte est nécessaire pour comprendre correctement la position en baoulé.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q7" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q7" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q7" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q7" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q7" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>8. Le contexte est nécessaire pour comprendre correctement la position en anglais.</p>
+                <div class="q-options">
+                    <label>1 <input type="radio" name="p4_q8" value="1" class="quiz-input" disabled></label>
+                    <label>2 <input type="radio" name="p4_q8" value="2" class="quiz-input" disabled></label>
+                    <label>3 <input type="radio" name="p4_q8" value="3" class="quiz-input" disabled></label>
+                    <label>4 <input type="radio" name="p4_q8" value="4" class="quiz-input" disabled></label>
+                    <label>5 <input type="radio" name="p4_q8" value="5" class="quiz-input" disabled></label>
+                </div>
+            </div>
+
+            <div class="q-block">
+                <p>9. Dans quelles situations utilisez-vous le plus des verbes spécifiques de positionnement (debout, couché, assis, posé, suspendu, etc.) ?</p>
+                <div class="q-options">
+                    <label><input type="radio" name="p4_q9" value="Debout" class="quiz-input" disabled> Debout</label>
+                    <label><input type="radio" name="p4_q9" value="Couché" class="quiz-input" disabled> Couché</label>
+                    <label><input type="radio" name="p4_q9" value="Assis" class="quiz-input" disabled> Assis</label>
+                    <label><input type="radio" name="p4_q9" value="Posé" class="quiz-input" disabled> Posé</label>
+                    <label><input type="radio" name="p4_q9" value="Suspendu" class="quiz-input" disabled> Suspendu</label>
+                </div>
+            </div>
+        </div>
         
         <div class="avis-section">
             <label for="avisInput"><strong>Votre avis sur le thème :</strong></label>
@@ -1255,7 +1383,6 @@ Debout <input type="radio" name="choix4">  Couché <input type="radio" name="cho
 
     <script>
         // === URL DU SCRIPT GOOGLE APPS SCRIPT ===
-        // Remplace la chaîne de caractères ci-dessous par ton lien déployé Google Apps Script
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMKr19ywnzaJxeVtASnD_aYpM4V7uR8aNyY96u6HwgIqGjUPQz0iKf_O60rOp-fqGS/exec";
 
         let currentSpeaker = { name: "", job: "" };
@@ -1407,7 +1534,7 @@ Debout <input type="radio" name="choix4">  Couché <input type="radio" name="cho
         const btnSubmitForm = document.getElementById('btnSubmitForm');
 
         function updateProgress() {
-            const totalGroups = 22; 
+            const totalGroups = 31; // P1(12) + P2(5) + P3(5) + P4(9) = 31
             let completed = 0;
 
             for(let i = 1; i <= 6; i++) {
@@ -1418,6 +1545,10 @@ Debout <input type="radio" name="choix4">  Couché <input type="radio" name="cho
             selects.forEach(select => {
                 if(select.value !== "" && select.value !== "...") completed++;
             });
+
+            for(let i = 1; i <= 9; i++) {
+                if(document.querySelector(`input[name="p4_q${i}"]:checked`)) completed++;
+            }
 
             const percent = (completed / totalGroups) * 100;
             quizProgressBar.style.width = Math.min(percent, 100) + '%';
@@ -1530,13 +1661,19 @@ Debout <input type="radio" name="choix4">  Couché <input type="radio" name="cho
                 row.push(select && select.value ? select.value : "");
             }
 
-            // 5. Verbes ajoutés
+            // 5. Partie 4 Usage & Perception (9 questions)
+            for(let i = 1; i <= 9; i++) {
+                const selected = document.querySelector(`input[name="p4_q${i}"]:checked`);
+                row.push(selected ? selected.value : "");
+            }
+
+            // 6. Verbes ajoutés
             const listAnglais = Array.from(document.querySelectorAll("#listAnglais li span")).map(el => el.textContent.trim());
             const listBaoule = Array.from(document.querySelectorAll("#listBaoule li span")).map(el => el.textContent.trim());
             row.push(listAnglais.join(", "));
             row.push(listBaoule.join(", "));
 
-            // 6. Avis
+            // 7. Avis
             const avis = document.getElementById("avisInput").value.trim();
             row.push(avis);
 
@@ -1547,7 +1684,6 @@ Debout <input type="radio" name="choix4">  Couché <input type="radio" name="cho
         btnSubmitForm.addEventListener('click', () => {
             const reponsesArray = getRowDataArray();
 
-            // Modification de l'état du bouton pendant l'envoi
             btnSubmitForm.disabled = true;
             btnSubmitForm.textContent = "Envoi en cours...";
 
@@ -1617,6 +1753,26 @@ Debout <input type="radio" name="choix4">  Couché <input type="radio" name="cho
                 data.push({
                     Champ: `Partie 3 - Matching (${matchLabels[i-1]})`,
                     Valeur: select && select.value ? select.value : "Aucune réponse"
+                });
+            }
+
+            const p4Labels = [
+                "Différence objet debout/couché/posé (Baoulé)",
+                "Différence stand/lie/sit/be (Anglais)",
+                "Précision Baoulé > Anglais",
+                "Précision Anglais > Baoulé",
+                "Difficulté choix sit/stand/lie",
+                "Traduction de 'be' par verbes spécifiques",
+                "Contexte nécessaire en Baoulé",
+                "Contexte nécessaire en Anglais",
+                "Situation d'usage la plus fréquente"
+            ];
+
+            for(let i = 1; i <= 9; i++) {
+                const selected = document.querySelector(`input[name="p4_q${i}"]:checked`);
+                data.push({
+                    Champ: `Partie 4 - ${p4Labels[i-1]}`,
+                    Valeur: selected ? selected.value : "Aucune réponse"
                 });
             }
 
