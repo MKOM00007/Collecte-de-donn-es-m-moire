@@ -775,7 +775,7 @@
             text-decoration:none;
             border-radius:10px;
             padding:4px;
-            color:orange;
+            color:#345;
             font-weight:bolder ;
             margin-left:12px;
             background:rgba(0,0,0,0.09);
@@ -1099,9 +1099,9 @@
                 </select>
             </div>
         </div>
-
+<h3>Partie 4 : Usage et perception des verbes de positionnement</h3>
         <div class="section4">
-            <h3>Partie 4 : Usage et perception des verbes de positionnement</h3>
+            
             <p style="margin-bottom:12px;"><strong>Consigne :</strong> Cochez la réponse qui correspond le mieux à votre opinion.</p>
 
             <div class="echelle">
@@ -1304,9 +1304,9 @@
         </div>
         <hr>
         <div class="livre">    
-            <p><a href="document1.pdf" target="_blank"><i class="fas fa-download"></i></a> Problèmes de linguistique générale</p> 
-            <p><a href="digital.pdf" target="_blank"><i class="fas fa-download"></i></a> Introduction à la linguistique générale</p>
-            <p><a href="pratabbe.pdf" target="_blank"><i class="fas fa-download"></i></a> Theoretical Linguistics</p>
+            <p><a href="document1.pdf" target="_blank"><i class="fas fa-download"></i></a> Pedagoy of the oppressed(Paulo Freire)</p> 
+            <p><a href="digital.pdf" target="_blank"><i class="fas fa-download"></i></a> Encyclopedia of African-American litterature(Wilfred D. Samuels)</p>
+            <p><a href="pratabbe.pdf" target="_blank"><i class="fas fa-download"></i></a> Venus dns le cloitre(Abbdu Prat)</p>
             <p><a href="saussureferdinand.pdf" target="_blank"><i class="fas fa-download"></i></a> Cours de linguistique générale (F. de Saussure)</p> 
             <p><a href="thingsfallapartnovel.pdf" target="_blank"><i class="fas fa-download"></i></a> Things Fall Apart (Chinua Achebe)</p>
             <p><a href="chinuaachebeamanofthepeople.pdf" target="_blank"><i class="fas fa-download"></i></a> A Man of the People (Chinua Achebe)</p>
@@ -1696,7 +1696,7 @@
                 body: JSON.stringify({ reponses: reponsesArray })
             })
             .then(() => {
-                alert("Succès ! Vos réponses ont été envoyées dans le Google Sheet.");
+                alert("Succès ! Vos réponses ont été envoyées.");
                 btnSubmitForm.textContent = "Réponses envoyées avec succès";
             })
             .catch((error) => {
@@ -1718,64 +1718,84 @@
             }
         });
 
+        // === STRUCTURATION ET RÉCUPÉRATION DES INTITULÉS COMPLETS ===
         function collectData() {
             const data = [
                 { Champ: "Nom complet du locuteur", Valeur: currentSpeaker.name || "Non renseigné" },
                 { Champ: "Profession du locuteur", Valeur: currentSpeaker.job || "Non renseigné" }
             ];
 
+            // 1. Partie 1 - Baoulé
             for(let i = 1; i <= 6; i++) {
                 const selected = document.querySelector(`input[name="b_choix${i}"]:checked`);
                 const justifSelect = document.getElementById(`justif_${i}`);
 
                 data.push({
-                    Champ: `Partie 1 (Baoulé) - Q${i} Choix verbe`,
+                    Champ: `Partie 1 (Baoulé) - Q${i} (Phrase choisie)`,
                     Valeur: selected ? selected.value : "Aucune réponse"
                 });
 
                 data.push({
-                    Champ: `Partie 1 (Baoulé) - Q${i} Justification verbe`,
+                    Champ: `Partie 1 (Baoulé) - Q${i} (Justification)`,
                     Valeur: (justifSelect && justifSelect.value) ? justifSelect.value : "Non spécifiée"
                 });
             }
 
+            // 2. Partie 2 - Anglais avec phrases complètes
+            const engQuestions = [
+                "The potted plant is [...] on the shelf.",
+                "The picture is [...] on the wall.",
+                "The dog is [...] down on the grass.",
+                "The cardboard box is [...] under the chair",
+                "The bird is [...] on the palm branch."
+            ];
+
             for(let i = 1; i <= 5; i++) {
                 const select = document.getElementById(`eng_${i}`);
                 data.push({
-                    Champ: `Partie 2 (Anglais) - Q${i}`,
+                    Champ: `Partie 2 (Anglais) - Q${i}: ${engQuestions[i-1]}`,
                     Valeur: select && select.value ? select.value : "Aucune réponse"
                 });
             }
 
-            const matchLabels = ["To sit", "To lie", "To be", "To lay", "To stand"];
+            // 3. Partie 3 - Matching Anglais VS Baoulé
+            const matchLabels = [
+                "Anglais : To sit -> Baoulé",
+                "Anglais : To lie -> Baoulé",
+                "Anglais : To be -> Baoulé",
+                "Anglais : To lay -> Baoulé",
+                "Anglais : To stand -> Baoulé"
+            ];
             for(let i = 1; i <= 5; i++) {
                 const select = document.getElementById(`match_${i}`);
                 data.push({
-                    Champ: `Partie 3 - Matching (${matchLabels[i-1]})`,
+                    Champ: `Partie 3 (Matching) - Q${i}: ${matchLabels[i-1]}`,
                     Valeur: select && select.value ? select.value : "Aucune réponse"
                 });
             }
 
-            const p4Labels = [
-                "Différence objet debout/couché/posé (Baoulé)",
-                "Différence stand/lie/sit/be (Anglais)",
-                "Précision Baoulé > Anglais",
-                "Précision Anglais > Baoulé",
-                "Difficulté choix sit/stand/lie",
-                "Traduction de 'be' par verbes spécifiques",
-                "Contexte nécessaire en Baoulé",
-                "Contexte nécessaire en Anglais",
-                "Situation d'usage la plus fréquente"
+            // 4. Partie 4 - Textes exacts des questions d'opinion / perception
+            const p4Questions = [
+                "1. Je fais une différence entre un objet debout, couché ou posé lorsque je parle en baoulé.",
+                "2. Je fais une différence entre stand, lie, sit et be lorsque je parle en anglais.",
+                "3. Le baoulé exprime la position des objets de manière plus précise que l’anglais.",
+                "4. L’anglais exprime la position des objets de manière plus précise que le baoulé.",
+                "5. Je trouve difficile de choisir entre sit, stand et lie en anglais.",
+                "6. Je traduis souvent le verbe anglais be par différents verbes en baoulé selon la position de l’objet.",
+                "7. Le contexte est nécessaire pour comprendre correctement la position en baoulé.",
+                "8. Le contexte est nécessaire pour comprendre correctement la position en anglais.",
+                "9. Dans quelles situations utilisez-vous le plus des verbes spécifiques de positionnement ?"
             ];
 
             for(let i = 1; i <= 9; i++) {
                 const selected = document.querySelector(`input[name="p4_q${i}"]:checked`);
                 data.push({
-                    Champ: `Partie 4 - ${p4Labels[i-1]}`,
+                    Champ: `Partie 4 - ${p4Questions[i-1]}`,
                     Valeur: selected ? selected.value : "Aucune réponse"
                 });
             }
 
+            // Verbes ajoutés
             const listAnglais = Array.from(document.querySelectorAll("#listAnglais li span")).map(el => el.textContent.trim());
             const listBaoule = Array.from(document.querySelectorAll("#listBaoule li span")).map(el => el.textContent.trim());
 
@@ -1790,7 +1810,7 @@
             });
 
             const avis = document.getElementById("avisInput").value.trim();
-            data.push({ Champ: "Avis / Remarques", Valeur: avis || "Aucun avis" });
+            data.push({ Champ: "Avis / Remarques du locuteur", Valeur: avis || "Aucun avis" });
 
             return data;
         }
@@ -1837,13 +1857,13 @@
                     fontStyle: 'bold'
                 },
                 styles: {
-                    fontSize: 10,
+                    fontSize: 9,
                     cellPadding: 3,
                     overflow: 'linebreak'
                 },
                 columnStyles: {
-                    0: { cellWidth: 90, fontStyle: 'bold' },
-                    1: { cellWidth: 90 }
+                    0: { cellWidth: 110, fontStyle: 'bold' },
+                    1: { cellWidth: 70 }
                 }
             });
 
