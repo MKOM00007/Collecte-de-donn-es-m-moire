@@ -1332,7 +1332,7 @@
             </div>
                 
             <div class="nombre-vue">
-                <h3 id="secretAdminTriggering">0</h3>
+                <h3 id="secretAdminTrigger">0</h3>
                 <br>Merci de faire partie de cette étude !   
             </div>    
 
@@ -1391,7 +1391,7 @@
         const pageHistory = ['home'];
 
         function initVisitorCounter() {
-            const displayTrigger = document.getElementById("secretAdminTriggering");
+            const displayTrigger = document.getElementById("secretAdminTrigger");
             let localViews = parseInt(localStorage.getItem('page_views') || 0) + 1;
             localStorage.setItem('page_views', localViews);
             displayTrigger.textContent = localViews;
