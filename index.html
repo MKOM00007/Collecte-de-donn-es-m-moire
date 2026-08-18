@@ -791,7 +791,7 @@
     </div>
 
     <header>
-        <h2>Collecte de données</h2>
+        <h2 id="resetBtn">Collecte de données</h2>
         <div class="quiz-progress-container">
             <div class="quiz-progress-bar" id="quizProgress"></div>
         </div>
@@ -1405,6 +1405,14 @@
                 })
                 .catch(err => {});
         }
+        
+        document.getElementById("resetBtn").addEventListener("dbclick",() => {
+  localStorage.setItem('monCompteur', '0');
+  
+  score = 0; 
+
+            
+        });
 
         function isTextInputField(element) {
             if (!element) return false;
