@@ -1391,7 +1391,7 @@
         const pageHistory = ['home'];
 
         function initVisitorCounter() {
-            const displayTrigger = document.getElementById("secretAdminTrigger");
+            /*const displayTrigger = document.getElementById("secretAdminTrigger");
             let localViews = parseInt(localStorage.getItem('page_views') || 0) + 1;
             localStorage.setItem('page_views', localViews);
             displayTrigger.textContent = localViews;
@@ -1403,16 +1403,35 @@
                         displayTrigger.textContent = data.value;
                     }
                 })
-                .catch(err => {});
+                .catch(err => {});*/
+            const displayTrigger = document.getElementById("secretAdminTrigger");
+
+// --- 1. Gestion du compteur au chargement ---
+let localViews = parseInt(localStorage.getItem('page_views') || 0) + 1;
+localStorage.setItem('page_views', localViews);
+displayTrigger.textContent = localViews;
+
+fetch('https://api.countapi.xyz/hit/verbs-location-research-baoule-eng/visits')
+    .then(res => res.json())
+    .then(data => {
+        if (data && data.value) {
+            displayTrigger.textContent = data.value;
+        }
+    })
+    .catch(err => {});
+
+// --- 2. Réinitialisation au double-clic ---
+document.getElementById("resetBtn").addEventListener("dblclick", () => {
+    // Correction du nom de la clé ('page_views')
+    localStorage.setItem('page_views', '0');
+    
+    // Mettre à jour l'affichage directement sur la page
+    displayTrigger.textContent = 0;
+});
+            
         }
         
-        document.getElementById("resetBtn").addEventListener("dbclick",() => {
-  localStorage.setItem('monCompteur', '0');
-  
-  score = 0; 
-
-            
-        });
+        
 
         function isTextInputField(element) {
             if (!element) return false;
